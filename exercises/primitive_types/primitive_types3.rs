@@ -5,10 +5,8 @@
 // Execute `rustlings hint primitive_types3` or use the `hint` watch subcommand
 // for a hint.
 
-// I AM NOT DONE
-
 fn main() {
-    let a = ???
+    let a: [i16; 100] = [3; 100]; // inline initialize the array with the same items
 
     if a.len() >= 100 {
         println!("Wow, that's a big array!");
