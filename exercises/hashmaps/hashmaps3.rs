@@ -1,6 +1,6 @@
 // hashmaps3.rs
 //
-// A list of scores (one per line) of a soccer match is given. Each line is of
+// A list of scores (one per line) of a football match is given. Each line is of
 // the form : "<team_1_name>,<team_2_name>,<team_1_goals>,<team_2_goals>"
 // Example: England,France,4,2 (England scored 4 goals, France 2).
 //
@@ -14,11 +14,10 @@
 // Execute `rustlings hint hashmaps3` or use the `hint` watch subcommand for a
 // hint.
 
-// I AM NOT DONE
-
 use std::collections::HashMap;
 
 // A structure to store the goal details of a team.
+#[derive(Debug)]
 struct Team {
     goals_scored: u8,
     goals_conceded: u8,
@@ -29,6 +28,7 @@ fn build_scores_table(results: String) -> HashMap<String, Team> {
     let mut scores: HashMap<String, Team> = HashMap::new();
 
     for r in results.lines() {
+        println!("{}", &r);
         let v: Vec<&str> = r.split(',').collect();
         let team_1_name = v[0].to_string();
         let team_1_score: u8 = v[2].parse().unwrap();
@@ -39,6 +39,35 @@ fn build_scores_table(results: String) -> HashMap<String, Team> {
         // will be the number of goals conceded from team_2, and similarly
         // goals scored by team_2 will be the number of goals conceded by
         // team_1.
+
+        // let mut entry1 = scores.entry(team_1_name)
+        //     .or_insert(Team { goals_scored : 0, goals_conceded: 0 });
+        // entry1.goals_scored += team_1_score;
+        // entry1.goals_conceded += team_2_score;
+        // let mut entry2 = scores.entry(team_2_name)
+        //     .or_insert(Team { goals_scored : 0, goals_conceded: 0 });
+        // entry2.goals_scored += team_2_score;
+        // entry2.goals_conceded += team_1_score;
+
+        let mut entry1 = scores.entry(team_1_name)
+            .and_modify(|t| {
+                t.goals_scored += team_1_score;
+                t.goals_conceded += team_2_score;
+            })
+            .or_insert(Team {
+                goals_scored: team_1_score,
+                goals_conceded: team_2_score,
+            });
+
+        let mut entry2 = scores.entry(team_2_name)
+            .and_modify(|t| {
+                t.goals_conceded += team_1_score;
+                t.goals_scored += team_2_score;
+            })
+            .or_insert(Team {
+                goals_conceded: team_1_score,
+                goals_scored: team_2_score,
+            });
     }
     scores
 }
